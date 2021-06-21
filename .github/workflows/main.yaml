@@ -1,0 +1,29 @@
+---
+'on':
+  push:
+    paths:
+      - .github/workflows/main.yaml
+      - dist/main.js
+
+jobs:
+  main:
+    strategy:
+      matrix:
+        cue-version:
+          - 0.3.0-beta.5
+          - 0.3.0-beta.7
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+          - self-hosted
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run colpal/setup-cue@${{ github.ref }}
+        uses: ./
+        with:
+          cue-version: ${{ matrix.cue-version }}
+
+      - run: cue version
